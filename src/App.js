@@ -28,12 +28,9 @@ export default class App extends Component {
   state = {
     profiles: [...fakeProfileGenerator(10)]
   }
-
   // In a real life situation
   componentDidMount() {
-    console.log(`fetch('/api/profiles')
-    .then(x => x.json())
-    .then(x => this.setState({profiles: x}))`)
+    console.log(`GET /api/profiles\nthen(x => this.setState({profiles: x}) )`)
   }
 
   verifyProfile = (id) => {
