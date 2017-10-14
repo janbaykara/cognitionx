@@ -9,7 +9,10 @@ const shrinkTime = '0.2s';
 const BorderedArticle = styled.article`
   transition: all ${shrinkTime} ease;
 
-  & + & { border: 1px solid #444; border-left: 0; border-right: 0; }
+  border: 1px solid #444;
+  border-left: 0;
+  border-right: 0;
+  &:first-child { border-top: 0; }
   &:last-child { border-bottom: 0; }
 
   /* Styling for element with the isClaimed prop */
