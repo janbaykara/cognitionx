@@ -46,19 +46,19 @@ export default class App extends Component {
 
   render() {
     return (
-      <div className='w-100 w-70-ns w-50-l center pa3 courier'>
+      <main className='w-100 w-70-ns w-50-l center pa3'>
         <header>
           <h1>Welcome to Witness Protection</h1>
           <h2>Claim your new identity</h2>
         </header>
-        <main>
+        <section>
           {this.state.profiles ? this.state.profiles.map(profile =>
             <Profile key={profile.id} profile={profile} verifyProfile={this.verifyProfile} />
           ) : (
             <div>Loading</div> // This should never appear since state is initialised with fake data
           )}
-        </main>
-      </div>
+        </section>
+      </main>
     )
   }
 }
