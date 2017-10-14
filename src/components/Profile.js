@@ -5,18 +5,24 @@ import styled from 'styled-components';
 // A thin line inbetween profile rows
 const DelimitedArticle = styled.article`
   & + & { border-top: 1px solid #444; }
+
+  /* Styling for thisClaimed prop */
+  ${({thisClaimed}) => thisClaimed ? `font-size: 30px;` : ``}
 `;
 
-export default ({profile, verifyProfile}) => (
-  <DelimitedArticle className={'pv2 w-100 flex items-center '+ (profile.verified ? 'o-40' : '')}>
-    <a
+export default ({profile, verifyProfile, claimedId}) => {
+  let thisClaimed = claimedId === profile.id;
+  return (
+  <DelimitedArticle thisClaimed={thisClaimed} className={'pv2 w-100 flex items-center '+ (profile.verified ? 'o-40' : '')}>
+    {!thisClaimed && <a
       className={'pa2 pointer ba br2 ' + (profile.verified ? 'moon-gray b--moon-gray' : 'light-green b--light-green grow')}
       onClick={evt => verifyProfile(profile.id)}
     >
       { profile.verified ? 'Claimed' : 'Claim'}
-    </a>
+    </a>}
 		<div className={'pl2 '+ (profile.verified ? 'strike' : '')}>
       <span className='b'>{profile.name}</span>
       &nbsp;(aged {profile.age})</div>
 	</DelimitedArticle>
-)
+  )
+}
