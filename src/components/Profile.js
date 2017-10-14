@@ -3,9 +3,11 @@ import 'tachyons';
 import styled from 'styled-components';
 import randomName from 'node-random-name';
 
+const shrinkTime = '0.2s';
+
 // A thin line inbetween profile rows
 const BorderedArticle = styled.article`
-  transition: all 0.15s ease;
+  transition: all ${shrinkTime} ease;
 
   & + & { border: 1px solid #444; border-left: 0; border-right: 0; }
   &:last-child { border-bottom: 0; }
@@ -31,11 +33,15 @@ const StaggeredScript = styled.div`
 const StaggeredP = styled.p`
   transition: none;
   opacity: 0;
+  max-height: 0px;
+  margin: 0;
 
   .js-item-claimed & {
-    transition: opacity 2s ease;
+    transition: opacity 2s ease, max-height 1s ease, margin 2s ease;
     transition-delay: ${({index,interval}) => index * 2}s;
+    max-height: 60px;
     opacity: 1;
+    margin: 20px 0;
   }
 `
 
@@ -46,22 +52,24 @@ export default ({profile, verifyProfile, unverifyProfile, claimedId}) => {
   // If this profile is claimed, make up a suitable backstory.
   let birthyear = new Date(new Date() - (1000 * 60 * 60 * 24 * 365.25 * profile.age)).getFullYear()
   // This increments and allows staggered animation with StaggeredP styled component. See above for notes.
-  let sI = 0.25;
+  let sI = 0.5;
 
   return (
   <BorderedArticle
     isClaimed={isClaimed}
-    className={'pv2 w-100 '+(notClaimed ? 'o-20' : '')+(isClaimed ? ' js-item-claimed' : '')}
+    className={'pv2 w-100 '+(notClaimed ? 'o-10' : '')+(isClaimed ? ' js-item-claimed' : '')}
   >
     <div className='flex items-center'>
-      {(isClaimed || !notClaimed) && (
         <a
-          className={'pa2 pointer ba br2 mr2 '+ (profile.verified ? 'red b--red' : 'light-green b--light-green grow')}
+          className={'pointer overflow-hidden '
+          + (notClaimed ? 'dn ' : 'pa2 mr2 ba br2 ')
+          + (profile.verified ? 'red b--red ' : 'light-green b--light-green grow ')}
+          // Disabled anim on button, too much gratuitious transitioning going on.
+          // style={{maxWidth: notClaimed ? '0px' : '100px', transition: 'all '+shrinkTime+' ease'}}
           onClick={evt => isClaimed ? unverifyProfile(profile.id) : verifyProfile(profile.id)}
         >
           { profile.verified ? 'Cancel' : 'Claim'}
         </a>
-      )}
   		<div>
         {isClaimed && <span>You are&nbsp;</span>}
         <span className='b'>{profile.name}</span>

@@ -66,7 +66,7 @@ export default class App extends Component {
   render() {
     return (
       <main className='w-100 w-70-ns w-50-l center pa3 pt4'>
-        <header className={this.state.claimedId ? 'o-20' : ''} style={{transition: 'opacity 0.2s ease'}}>
+        <header className={this.state.claimedId ? 'o-10' : ''} style={{transition: 'opacity 0.2s ease'}}>
           <h1>Welcome to Witness Protection</h1>
           <h2>Claim your new identity, memorise your backstory.</h2>
         </header>
