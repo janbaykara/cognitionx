@@ -6,7 +6,7 @@ import randomName from 'node-random-name';
 const shrinkTime = '0.2s';
 
 // A thin line inbetween profile rows
-const BorderedArticle = styled.article`
+const Bordered = styled.article`
   transition: all ${shrinkTime} ease;
 
   border: 1px solid #444;
@@ -14,10 +14,15 @@ const BorderedArticle = styled.article`
   border-right: 0;
   &:first-child { border-top: 0; }
   &:last-child { border-bottom: 0; }
-
-  /* Styling for element with the isClaimed prop */
-  ${({isClaimed}) => isClaimed ? `font-size: 20px;` : ``}
 `;
+// Splitting off prop-specific styling dedupes generated CSS considerably
+const BorderedArticle = styled(Bordered)`
+  /* Styling for element with the isClaimed prop */
+  ${({isClaimed}) => isClaimed ? `
+    font-size: 20px;
+    border: none;
+  ` : ``}
+`
 
 /**
   Styled components to stagger animations.
@@ -33,7 +38,7 @@ const StaggeredScript = styled.div`
   max-height: 0px;
   .js-item-claimed & { max-height: 500px; }
 `
-const StaggeredP = styled.p`
+const Staggered = styled.p`
   transition: none;
   opacity: 0;
   max-height: 0px;
@@ -41,10 +46,15 @@ const StaggeredP = styled.p`
 
   .js-item-claimed & {
     transition: opacity 2s ease, max-height 1s ease, margin 2s ease;
-    transition-delay: ${({index,interval}) => index * 2}s;
     max-height: 60px;
     opacity: 1;
     margin: 20px 0;
+  }
+`
+
+const StaggeredP = styled(Staggered)`
+  .js-item-claimed & {
+    transition-delay: ${({index,interval}) => index * 2}s;
   }
 `
 
