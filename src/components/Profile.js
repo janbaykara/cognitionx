@@ -17,7 +17,7 @@ const BorderedArticle = styled.article`
 /**
   Styled components to stagger animations.
 
-  Could generalise this component by providing style props
+  Could generalise this component by providing dynamic props to the CSS
     e.g. ${({triggerClass}) => triggerClass} & { max-height: 500px; }
     e.g. ${({index,interval}) => index * interval}
 
