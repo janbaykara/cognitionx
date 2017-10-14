@@ -37,10 +37,11 @@ export default class App extends Component {
 
   verifyProfile = (id) => {
     const thisProfileI = this.state.profiles.findIndex(p => p.id === id);
-    if(!this.state.claimedProfile && !this.state.profiles[thisProfileI].verified) {
-      this.state.profiles[thisProfileI].verified = true;
+    if(!this.state.claimedId && !this.state.profiles[thisProfileI].verified) {
+      let nextState = this.state
+      nextState.profiles[thisProfileI].verified = true;
       this.setState({
-        profiles: this.state.profiles,
+        profiles: nextState.profiles,
         claimedId: id
       })
       // In a real life situation
@@ -48,21 +49,30 @@ export default class App extends Component {
     }
   }
 
+  unverifyProfile = (id) => {
+    const thisProfileI = this.state.profiles.findIndex(p => p.id === id);
+    if(this.state.claimedId && this.state.profiles[thisProfileI].verified) {
+      let nextState = this.state
+      nextState.profiles[thisProfileI].verified = false;
+      this.setState({
+        profiles: nextState.profiles,
+        claimedId: null
+      })
+      // In a real life situation
+      console.log(`POST /api/un_verify/${id}`)
+    }
+  }
+
   render() {
-    let claimedProfile = this.state.profiles.find(p => p.id === this.state.claimedId)
     return (
-      <main className='w-100 w-70-ns w-50-l center pa3'>
-        <header>
+      <main className='w-100 w-70-ns w-50-l center pa3 pt4'>
+        <header className={this.state.claimedId ? 'o-20' : ''} style={{transition: 'opacity 0.2s ease'}}>
           <h1>Welcome to Witness Protection</h1>
           <h2>Claim your new identity</h2>
         </header>
         <section>
-          {this.state.profiles ? (
-            this.state.claimedId === null ? this.state.profiles.map(profile =>
-              <Profile key={profile.id} claimedId={this.state.claimedId} profile={profile} verifyProfile={this.verifyProfile} />
-            ) : (
-              <Profile key={claimedProfile} claimedId={this.state.claimedId} profile={claimedProfile} />
-            )
+          {this.state.profiles ? this.state.profiles.map(profile =>
+            <Profile key={profile.id} claimedId={this.state.claimedId} profile={profile} verifyProfile={this.verifyProfile} unverifyProfile={this.unverifyProfile} />
           ) : (
             <div>Loading profiles</div> // This should never appear since state is initialised with fake data
           )}
