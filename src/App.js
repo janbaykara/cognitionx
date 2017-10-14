@@ -35,8 +35,12 @@ export default class App extends Component {
 
   verifyProfile = (id) => {
     const thisProfileI = this.state.profiles.findIndex(p => p.id === id);
-    this.state.profiles[thisProfileI].verified = true;
-    this.setState(this.state.profiles)
+    if(!this.state.profiles[thisProfileI].verified) {
+      this.state.profiles[thisProfileI].verified = true;
+      this.setState(this.state.profiles)
+      // In a real life situation
+      console.log(`POST /api/verify/${id}`)
+    }
   }
 
   render() {
