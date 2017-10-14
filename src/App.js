@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import randomName from 'node-random-name'; // Certainly wouldn't include this in anything for production
 import Profile from './components/Profile';
+import 'tachyons';
 
 /**
   Construct some fake news data.
@@ -44,18 +45,20 @@ export default class App extends Component {
   }
 
   render() {
-    return [
-      <header key='header'>
-        <h1>Welcome to Witness Protection</h1>
-        <h2>Claim your new identity</h2>
-      </header>,
-      <main key='main'>
-        {this.state.profiles ? this.state.profiles.map(profile =>
-          <Profile key={profile.id} profile={profile} verifyProfile={this.verifyProfile} />
-        ) : (
-          <div>Loading</div> // This should never appear since state is initialised with fake data
-        )}
-      </main>
-    ]
+    return (
+      <div className='w-100 w-70-ns w-50-l center pa3 courier'>
+        <header>
+          <h1>Welcome to Witness Protection</h1>
+          <h2>Claim your new identity</h2>
+        </header>
+        <main>
+          {this.state.profiles ? this.state.profiles.map(profile =>
+            <Profile key={profile.id} profile={profile} verifyProfile={this.verifyProfile} />
+          ) : (
+            <div>Loading</div> // This should never appear since state is initialised with fake data
+          )}
+        </main>
+      </div>
+    )
   }
 }
