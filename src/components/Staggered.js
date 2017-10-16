@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
@@ -8,6 +8,8 @@ import PropTypes from 'prop-types';
 	These props will be automatically passed down to StaggeredElement,
 	but can be manually overriden on a per-child basis.
 	@prop {String} triggered CSS selector to trigger staggered transition on.
+	@prop {String} elementBeforeCSS CSS for all children, when trigger == false
+	@prop {String} elementAfterCSS CSS for all children, when trigger == true
 	@prop {Number} interval (default: 1) (in seconds) interval between <StaggeredElement /> transitions
 	@prop {Number} delay (default: 0) (in seconds) initial transition delay
 
@@ -15,7 +17,7 @@ import PropTypes from 'prop-types';
 		<StaggeredContainer
 			triggered={this.props.triggered}
 			elementBeforeCSS={`color: red;`}
-			elementAfterCSS={`color: green;`}
+			elementAfterCSS={`color: green; transition: color 0.3s ease;`}
 		>
 			<StaggeredElement>Will transition immediately...</StaggeredElement>
 			<StaggeredElement>... and this, a second later...</StaggeredElement>
@@ -30,7 +32,6 @@ import PropTypes from 'prop-types';
 const StaggeredDiv = styled.div`
   ${({triggered, beforeCSS, afterCSS}) => (!triggered ? beforeCSS : afterCSS)}
 `;
-
 export class StaggeredContainer extends StaggeredDiv {
 	// Send prop data down to children
 	getChildContext = () => {
@@ -61,7 +62,6 @@ StaggeredContainer.childContextTypes = {
 const Staggered = styled.p`
   ${({triggered, beforeCSS, afterCSS}) => (!triggered ? beforeCSS : afterCSS)}
 `;
-
 // Implemented separately to prevent duplication of Staggered CSS
 const ChildAnimated = styled(Staggered)`
   ${({triggered,index,interval,delay}) => triggered ? `
