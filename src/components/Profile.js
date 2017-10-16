@@ -2,7 +2,7 @@ import React from 'react';
 import 'tachyons';
 import styled from 'styled-components';
 import randomName from 'node-random-name';
-import { StaggeredBlock, StaggeredP } from './Staggered'
+import { StaggeredContainer, StaggeredElement } from './Staggered'
 
 const shrinkTime = '0.2s';
 
@@ -33,8 +33,6 @@ export default ({profile, verifyProfile, unverifyProfile, claimedId}) => {
   let notClaimed = claimedId !== null && !isClaimed;
   // If this profile is claimed, make up a suitable backstory.
   let birthyear = new Date(new Date() - (1000 * 60 * 60 * 24 * 365.25 * profile.age)).getFullYear()
-  // This increments and allows staggered animation with StaggeredP styled component. See above for notes.
-  let sI = 0.5;
 
   return (
   <BorderedArticle
@@ -57,15 +55,15 @@ export default ({profile, verifyProfile, unverifyProfile, claimedId}) => {
       </div>
     </div>
     {/* This was more for fun than anything; the Basic Social Network would hate the idea of providing so much information, I realise. */}
-    <StaggeredBlock triggerClass='.js-item-claimed'>
-      <StaggeredP triggerClass='.js-item-claimed' interval={2} index={sI++}>You were born in {birthyear}, and raised by a loving family.</StaggeredP>
-      <StaggeredP triggerClass='.js-item-claimed' interval={2} index={sI++}>Your dog's name was {randomName({seed: profile.id, first: true})}.</StaggeredP>
-      <StaggeredP triggerClass='.js-item-claimed' interval={2} index={sI++}>Things were going great...</StaggeredP>
-      <StaggeredP triggerClass='.js-item-claimed' interval={2} index={sI++}>... until the incident.</StaggeredP>
-      <StaggeredP triggerClass='.js-item-claimed' interval={2} index={sI++}>Suffice to say, you needed a change.</StaggeredP>
-      <StaggeredP triggerClass='.js-item-claimed' interval={2} index={sI++}>So you packed your bags, just took off.</StaggeredP>
-      <StaggeredP triggerClass='.js-item-claimed' interval={2} index={sI++}>And applied for a job at CognitionX.</StaggeredP>
-    </StaggeredBlock>
+    <StaggeredContainer triggered={isClaimed} interval={2} delay={0.5}>
+      <StaggeredElement>You were born in {birthyear}, and raised by a loving family.</StaggeredElement>
+      <StaggeredElement>Your dog's name was {randomName({seed: profile.id, first: true})}.</StaggeredElement>
+      <StaggeredElement>Things were going great...</StaggeredElement>
+      <StaggeredElement delay={1}>... until the incident.</StaggeredElement>
+      <StaggeredElement delay={1}t>Suffice to say, you needed a change.</StaggeredElement>
+      <StaggeredElement>So you packed your bags, just took off.</StaggeredElement>
+      <StaggeredElement>And applied for a job at CognitionX.</StaggeredElement>
+    </StaggeredContainer>
 	</BorderedArticle>
   )
 }
