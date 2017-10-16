@@ -12,7 +12,11 @@ import PropTypes from 'prop-types';
 	@prop {Number} delay (default: 0) (in seconds) initial transition delay
 
 	@demo
-		<StaggeredContainer triggered={this.props.triggered}>
+		<StaggeredContainer
+			triggered={this.props.triggered}
+			elementBeforeCSS={`color: red;`}
+			elementAfterCSS={`color: green;`}
+		>
 			<StaggeredElement>Will transition immediately...</StaggeredElement>
 			<StaggeredElement>... and this, a second later...</StaggeredElement>
 			<StaggeredElement>... and so on...</StaggeredElement>
@@ -24,21 +28,17 @@ import PropTypes from 'prop-types';
 	Passes context through to child animation components
 */
 const StaggeredDiv = styled.div`
-  overflow: hidden;
-  ${({triggered}) => !triggered ?
-	// Container initial state
-	` max-height: 0px;
-	` :
-	// Container triggered state
-	` max-height: 500px;
-	`}
-`
+  ${({triggered, beforeCSS, afterCSS}) => (!triggered ? beforeCSS : afterCSS)}
+`;
+
 export class StaggeredContainer extends StaggeredDiv {
 	// Send prop data down to children
 	getChildContext = () => {
 		let i = 0;
 		let delay = this.props.delay || 0;
 		return {
+			elementBeforeCSS: this.props.elementBeforeCSS,
+			elementAfterCSS: this.props.elementAfterCSS,
 			triggered: this.props.triggered,
 			delay: (moreDelay) => delay += (moreDelay || 0),
 			interval: this.props.interval || 1,
@@ -47,6 +47,8 @@ export class StaggeredContainer extends StaggeredDiv {
 	}
 }
 StaggeredContainer.childContextTypes = {
+	elementBeforeCSS: PropTypes.string,
+	elementAfterCSS: PropTypes.string,
   triggered: PropTypes.bool,
 	delay: PropTypes.func,
 	interval: PropTypes.number,
@@ -57,20 +59,9 @@ StaggeredContainer.childContextTypes = {
 	Child components.
 */
 const Staggered = styled.p`
-  ${({triggered}) => !triggered ?
-	// Container initial state
-	` transition: none;
-	  opacity: 0;
-	  max-height: 0px;
-	  margin: 0;
-  ` :
-	// Container triggered state
-	` transition: opacity 2s ease, max-height 1s ease, margin 2s ease;
-    max-height: 60px;
-    opacity: 1;
-    margin: 20px 0;
-	`}
-`
+  ${({triggered, beforeCSS, afterCSS}) => (!triggered ? beforeCSS : afterCSS)}
+`;
+
 // Implemented separately to prevent duplication of Staggered CSS
 const ChildAnimated = styled(Staggered)`
   ${({triggered,index,interval,delay}) => triggered ? `
@@ -84,6 +75,8 @@ export function StaggeredElement(props,context) {
 	return (
 		// Render child with parent's props, or override with own props
 		<ChildAnimated
+			beforeCSS={props.beforeCSS || context.elementBeforeCSS}
+			afterCSS={props.afterCSS || context.elementAfterCSS}
 			triggered={props.triggered || context.triggered}
 			index={props.index || context.index()}
 			delay={props.delay ? context.delay(props.delay) : context.delay()} // Aggregates delays
@@ -92,6 +85,8 @@ export function StaggeredElement(props,context) {
 	)
 }
 StaggeredElement.contextTypes = {
+	elementBeforeCSS: PropTypes.string,
+	elementAfterCSS: PropTypes.string,
   triggered: PropTypes.bool,
 	delay: PropTypes.func,
 	interval: PropTypes.number,

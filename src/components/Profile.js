@@ -55,7 +55,19 @@ export default ({profile, verifyProfile, unverifyProfile, claimedId}) => {
       </div>
     </div>
     {/* This was more for fun than anything; the Basic Social Network would hate the idea of providing so much information, I realise. */}
-    <StaggeredContainer triggered={isClaimed} interval={2} delay={0.5}>
+    <StaggeredContainer triggered={isClaimed} interval={2} delay={0.5}
+      elementBeforeCSS={`
+        transition: none;
+    	  opacity: 0;
+    	  max-height: 0px;
+    	  margin: 0;
+      `}
+      elementAfterCSS={`
+        transition: opacity 2s ease, max-height 1s ease, margin 2s ease;
+        max-height: 60px;
+        opacity: 1;
+        margin: 20px 0;
+      `}>
       <StaggeredElement>You were born in {birthyear}, and raised by a loving family.</StaggeredElement>
       <StaggeredElement>Your dog's name was {randomName({seed: profile.id, first: true})}.</StaggeredElement>
       <StaggeredElement>Things were going great...</StaggeredElement>
